@@ -1,8 +1,11 @@
+# Animate robots in Tkinter
+
 from tkinter import Tk, Label
 from PIL import Image, ImageTk
 import util
 
-width, height = 101, 103  # Image size
+
+WIDTH, HEIGHT = 101, 103  # Image size
 seconds = 0
 robots = []
 
@@ -10,29 +13,28 @@ robots = []
 def update_frame():
     global seconds
     global robots
-    
+
     seconds += 1
-    move(robots, width, height)
+    move(robots, WIDTH, HEIGHT)
 
 #    if seconds % 49 == 0:
     text_label.config(text=f"Seconds={seconds}")
     image = generate_frame(robots)
-    
+
     # Convert the image to ImageTk format for Tkinter
     image_tk = ImageTk.PhotoImage(image)
-    
+
     # Update the label with the new frame
     img_label.config(image=image_tk)
     img_label.image = image_tk  # Keep a reference to avoid garbage collection
-    
-   
+
     # Schedule the next frame update
     root.after(100, update_frame)
 
 # Function to generate a new image (frame) dynamically
 def generate_frame(points):
     # Create a blank image with a black background
-    image = Image.new('L', (width, height), 'black')
+    image = Image.new('L', (WIDTH, HEIGHT), 'black')
 
     # Create the pixel map
     pixels = image.load()
@@ -40,12 +42,12 @@ def generate_frame(points):
     for p in points:
         pixels[(p[0].real, p[0].imag)] = 250
 
-    return image.resize((width*5, height*5), resample = Image.Resampling.BOX)
+    return image.resize((WIDTH*5, HEIGHT*5), resample = Image.Resampling.BOX)
 
-def move(robots, W: int, H: int):
+def move(robots, width: int, height: int):
     for i,r in enumerate(robots):
         pos = r[0] + r[1]
-        r0 = complex(pos.real % W, pos.imag % H)
+        r0 = complex(pos.real % width, pos.imag % height)
         robots[i] = (r0, r[1])
 
 # Initialize the Tkinter window
