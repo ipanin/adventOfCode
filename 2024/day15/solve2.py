@@ -1,3 +1,4 @@
+# Робот двигает ящики [] по лабиринту #
 import util
 
 def solve2(lines: list[str], direction_lines: list[str]) -> int:

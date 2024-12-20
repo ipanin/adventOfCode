@@ -1,3 +1,4 @@
+# Робот двигает ящики O по лабиринту #
 import util
 
 def solve1(lines: list[str], direction_lines: list[str]) -> int:
