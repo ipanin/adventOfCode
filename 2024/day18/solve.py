@@ -44,4 +44,4 @@ util.assert_equal(solve1(obstacles[:12], 7, 7), 22, "Part 1 sample")
 
 obstacles = load_obstacles('input.txt')
 util.assert_equal(solve1(obstacles[:1024], 71, 71), 372, "Part 1")
-util.assert_equal(solve2(obstacles, 71, 71), 0, "Part 2")
+util.assert_equal(solve2(obstacles, 71, 71), 25+6j, "Part 2")
