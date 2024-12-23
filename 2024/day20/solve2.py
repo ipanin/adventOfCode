@@ -8,9 +8,7 @@ import util
 def solve2(matrix, min_economy: int) -> int:
     cheet_path_count = 0
     start = end = complex(0,0)
-    direction = 1
     walls = set()
-    paths = dict()
 
     for coord, c in matrix.items():
         if c == 'S':
@@ -65,5 +63,3 @@ util.assert_equal(solve2(matrix, 74), 7, "Part 2 sample")
 
 matrix = util.load_char_matrix('input.txt')
 util.assert_equal(solve2(matrix, 100), 983054, "Part 2")
-
-

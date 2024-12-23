@@ -9,9 +9,7 @@ import util
 def solve1(matrix, min_economy: int) -> int:
     res = 0
     start = end = complex(0,0)
-    direction = 1
     walls = set()
-    paths = dict()
 
     for coord, c in matrix.items():
         if c == 'S':
@@ -45,7 +43,6 @@ def solve1(matrix, min_economy: int) -> int:
                 break
         main_path.append(curr)
 
-    main_path_len = len(main_path)-1
     res = 0
     for pos in reversed(main_path):
         for n in util.NEAR4:
@@ -64,5 +61,3 @@ util.assert_equal(solve1(matrix, 37), 3, "Part 1 sample")
 
 matrix = util.load_char_matrix('input.txt')
 util.assert_equal(solve1(matrix, 100), 1375, "Part 1")
-
-
