@@ -25,11 +25,11 @@ def parse_labirint(matrix):
 def discover_labirint(walls, start):
     direction = 1+0j
     visited = { (start, direction): 0 }
-    edge = set([(start, direction)])
+    wave = set([(start, direction)])
 
-    while len(edge) > 0:
-        edge_next = set()
-        for e in edge:
+    while len(wave) > 0:
+        wave_next = set()
+        for e in wave:
             score = visited[e]
             pos, dir = e
             next_pos = pos + dir
@@ -38,7 +38,7 @@ def discover_labirint(walls, start):
                 next_pair = (next_pos, dir)
                 if next_pair in visited and visited[next_pair] > next_score or next_pair not in visited:
                     visited[next_pair] = next_score
-                    edge_next.add(next_pair)
+                    wave_next.add(next_pair)
 
             for turn in [1j, -1j]: # turn left/right
                 next_dir = dir * turn
@@ -48,8 +48,8 @@ def discover_labirint(walls, start):
                     next_pair = (next_pos, next_dir)
                     if next_pair in visited and next_score < visited[next_pair] or next_pair not in visited:
                         visited[next_pair] = next_score
-                        edge_next.add((next_pos, next_dir))
-        edge = edge_next
+                        wave_next.add((next_pos, next_dir))
+        wave = wave_next
     return visited
 
 # определить минимальную цену позиции среди всех 4х направлений
@@ -74,16 +74,16 @@ def solve2(matrix) -> int:
     visited = discover_labirint(walls, start)
 
     trails = { end }
-    edge = set()
+    wave = set()
     # найти направления прихода в данную клетку с минимальной ценой
     dirs = min_score_dir(end, visited)
     for d in dirs:
         # добавить эти клетки в следующую волну и в клетки маршрутов
-        edge.add((end, d))
+        wave.add((end, d))
 
-    while len(edge) > 0:
-        edge_next = set()
-        for e in edge:
+    while len(wave) > 0:
+        wave_next = set()
+        for e in wave:
             score = visited[e]
             pos, dir = e
             prev_pos = pos-dir
@@ -91,16 +91,16 @@ def solve2(matrix) -> int:
             # если возможен приход с клетки с тем же направлением с ценой -1р
             if prev_pair in visited and visited[prev_pair] == score-1:
                 trails.add(prev_pos)
-                edge_next.add(prev_pair)
+                wave_next.add(prev_pair)
             for turn in [1j, -1j]: # turn left/right
                 prev_dir = dir * turn
                 prev_pair = (prev_pos, prev_dir)
                 # если возможен приход с клетки с перпендикулярным направлением с ценой -1001р
                 if prev_pair in visited and visited[prev_pair] == score-1001:
                     trails.add(prev_pos)
-                    edge_next.add(prev_pair)
+                    wave_next.add(prev_pair)
         
-        edge = edge_next
+        wave = wave_next
 
     return len(trails)
 

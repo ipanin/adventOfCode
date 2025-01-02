@@ -1,0 +1,3 @@
+ MD013: false # line length <= 80
+ MD022: false # blanks surround headers
+ MD032: false # blanks surround lists
