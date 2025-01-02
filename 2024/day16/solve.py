@@ -32,25 +32,22 @@ def discover_labirint(walls, start):
         for e in edge:
             score = visited[e]
             pos, dir = e
-
-            next_dir = dir
-            next_pos = pos + next_dir
+            next_pos = pos + dir
             next_score = score + 1
             if next_pos not in walls:
-                pair = (next_pos, next_dir)
-                if pair in visited and visited[pair] > next_score or pair not in visited:
-                    visited[pair] = next_score
-                    edge_next.add((next_pos, next_dir))
+                next_pair = (next_pos, dir)
+                if next_pair in visited and visited[next_pair] > next_score or next_pair not in visited:
+                    visited[next_pair] = next_score
+                    edge_next.add(next_pair)
 
-            for d in util.NEAR4:
-                if d == dir: continue
-                next_dir = d
+            for turn in [1j, -1j]: # turn left/right
+                next_dir = dir * turn
                 next_pos = pos + next_dir
                 next_score = score + 1001
                 if next_pos not in walls:
-                    pair = (next_pos, next_dir)
-                    if pair in visited and visited[pair] > next_score or pair not in visited:
-                        visited[pair] = next_score
+                    next_pair = (next_pos, next_dir)
+                    if next_pair in visited and next_score < visited[next_pair] or next_pair not in visited:
+                        visited[next_pair] = next_score
                         edge_next.add((next_pos, next_dir))
         edge = edge_next
     return visited
@@ -63,19 +60,49 @@ def min_score_of(pos: complex, visited):
             min_score = visited[(pos,d)]
     return min_score
 
+# определить направления, дающие минимальную цену позиции
+def min_score_dir(pos: complex, visited):
+    min_score = min_score_of(pos, visited)
+    dirs = []
+    for d in util.NEAR4:
+        if (pos, d) in visited and visited[(pos,d)] == min_score:
+            dirs.append(d)
+    return dirs
+
 def solve2(matrix) -> int:
     walls, start, end = parse_labirint(matrix)
     visited = discover_labirint(walls, start)
 
-    trail = { end }
-    #edge = set([(end, direction)])
-    curr = end
-    #while curr != start:
-        #for d in util.NEAR4:
-            #next_pos = curr + d
-            #if score_of(next_pos)
+    trails = { end }
+    edge = set()
+    # найти направления прихода в данную клетку с минимальной ценой
+    dirs = min_score_dir(end, visited)
+    for d in dirs:
+        # добавить эти клетки в следующую волну и в клетки маршрутов
+        edge.add((end, d))
 
-    return -1
+    while len(edge) > 0:
+        edge_next = set()
+        for e in edge:
+            score = visited[e]
+            pos, dir = e
+            prev_pos = pos-dir
+            prev_pair = (prev_pos, dir)
+            # если возможен приход с клетки с тем же направлением с ценой -1р
+            if prev_pair in visited and visited[prev_pair] == score-1:
+                trails.add(prev_pos)
+                edge_next.add(prev_pair)
+            for turn in [1j, -1j]: # turn left/right
+                prev_dir = dir * turn
+                prev_pair = (prev_pos, prev_dir)
+                # если возможен приход с клетки с перпендикулярным направлением с ценой -1001р
+                if prev_pair in visited and visited[prev_pair] == score-1001:
+                    trails.add(prev_pos)
+                    edge_next.add(prev_pair)
+        
+        edge = edge_next
+
+    return len(trails)
 
 matrix = util.load_char_matrix('sample1.txt')
 util.assert_equal(solve1(matrix), 7036, "Part 1 sample 1")
@@ -87,4 +114,4 @@ util.assert_equal(solve2(matrix),    64, "Part 2 sample 2")
 
 matrix = util.load_char_matrix('input.txt')
 util.assert_equal(solve1(matrix), 106512, "Part 1")
-util.assert_equal(solve2(matrix), 0, "Part 2")
+util.assert_equal(solve2(matrix),    563, "Part 2")
