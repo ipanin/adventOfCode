@@ -1,6 +1,6 @@
 # Поиск маршрутов в лабиринте с возможностью срезать 1 препятствие
 # найти кратчайший маршрут - главный
-# вдоль маршрута пробовать убрать 1 препятсвие, если это не стена
+# вдоль маршрута пробовать убрать 1 препятствие, если это не стена
 # если выход на главном маршруте, то посчитать экономию
 # иначе попробовать построить новый маршрут
 
@@ -46,12 +46,12 @@ def solve1(matrix, min_economy: int) -> int:
     res = 0
     for pos in reversed(main_path):
         for n in util.NEAR4:
-            cheet_pos = pos + n
-            if cheet_pos not in walls:
+            cheat_pos = pos + n
+            if cheat_pos not in walls:
                 continue
-            if cheet_pos + n not in visited:
+            if cheat_pos + n not in visited:
                 continue
-            new_to_end = visited[cheet_pos+n]
+            new_to_end = visited[cheat_pos+n]
             if visited[pos] - new_to_end - 2 >= min_economy:
                 res += 1
     return res

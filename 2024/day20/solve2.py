@@ -6,7 +6,7 @@
 import util
 
 def solve2(matrix, min_economy: int) -> int:
-    cheet_path_count = 0
+    cheat_path_count = 0
     start = end = complex(0,0)
     walls = set()
 
@@ -42,21 +42,21 @@ def solve2(matrix, min_economy: int) -> int:
                 break
         main_path.append(curr)
 
-    cheet_path_count = 0
-    max_cheet_time = 20
+    cheat_path_count = 0
+    max_cheat_time = 20
     for pos in reversed(main_path):
-        for dx in range(-max_cheet_time, max_cheet_time+1):
-            for dy in range(-max_cheet_time, max_cheet_time+1):
-                cheet_time = abs(dx) + abs(dy)
-                if cheet_time <= max_cheet_time:
-                    cheet_pos = pos + dx + 1j*dy
-                    if cheet_pos not in visited:
+        for dx in range(-max_cheat_time, max_cheat_time+1):
+            for dy in range(-max_cheat_time, max_cheat_time+1):
+                cheat_time = abs(dx) + abs(dy)
+                if cheat_time <= max_cheat_time:
+                    cheat_pos = pos + dx + 1j*dy
+                    if cheat_pos not in visited:
                         continue
-                    new_to_end = visited[cheet_pos]
-                    economy = visited[pos] - new_to_end - cheet_time
+                    new_to_end = visited[cheat_pos]
+                    economy = visited[pos] - new_to_end - cheat_time
                     if economy >= min_economy:
-                        cheet_path_count += 1
-    return cheet_path_count
+                        cheat_path_count += 1
+    return cheat_path_count
 
 matrix = util.load_char_matrix('sample.txt')
 util.assert_equal(solve2(matrix, 74), 7, "Part 2 sample")
